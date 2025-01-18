@@ -1,17 +1,39 @@
 package api
 
-import "database/sql"
+import (
+	"database/sql"
+	"log/slog"
+	"net/http"
+
+	"github.com/shahin-salehi/equity-api/services/listing"
+)
 
 type APIServer struct {
-	port string
+	addr string
 	db   *sql.DB
 }
 
 func NewAPIServer(port string, db *sql.DB) *APIServer {
 	return &APIServer{
-		port: port,
+		addr: port,
 		db:   db,
 	}
 }
 
-func (s *APIServer) Run() error
+/*
+* Starts our api server
+ */
+func (s *APIServer) Run() error {
+
+	// create router (name mux comes from multiplexer)
+	router := http.NewServeMux()
+
+	// give our handler the router so it can register functionality on it
+	listingHandler := listing.NewHandler()
+
+	// register desired listing routes on router
+	listingHandler.RegisterRoutes(router)
+
+	slog.Info("API server started.")
+	return http.ListenAndServe(s.addr, router)
+}
