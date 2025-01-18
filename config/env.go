@@ -1,14 +1,21 @@
 package config
 
-import "os"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 type Config struct {
-	ConnectionString string
+	ConnectionString      string
+	LocalConnectionString string
 }
 
 func InitConfig() Config {
+	godotenv.Load()
 	return Config{
-		ConnectionString: getEnv("pg_connection", ""),
+		ConnectionString:      getEnv("pg_connection", ""),
+		LocalConnectionString: getEnv("pg_local", ""),
 	}
 }
 

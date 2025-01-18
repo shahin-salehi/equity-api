@@ -5,11 +5,28 @@ import (
 	"os"
 
 	"github.com/shahin-salehi/equity-api/cmd/api"
+	"github.com/shahin-salehi/equity-api/config"
+	"github.com/shahin-salehi/equity-api/db"
 )
 
 func main() {
-	server := api.NewAPIServer(":5500", nil)
-	err := server.Run()
+	// env
+
+	config := config.InitConfig()
+	cs := config.LocalConnectionString
+	if cs == "" {
+		slog.Error("connection string emptu, shutting down.")
+		os.Exit(1)
+	}
+
+	db, err := db.NewDatabase(cs)
+	if err != nil {
+		slog.Error("failed to start database, shutting down.")
+		os.Exit(1)
+	}
+
+	server := api.NewAPIServer(":5500", db)
+	err = server.Run()
 	if err != nil {
 		slog.Error("Failed to start api server, shutting down.", slog.Any("error", err))
 		os.Exit(1)

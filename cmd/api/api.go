@@ -1,19 +1,19 @@
 package api
 
 import (
-	"database/sql"
 	"log/slog"
 	"net/http"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/shahin-salehi/equity-api/services/listing"
 )
 
 type APIServer struct {
 	addr string
-	db   *sql.DB
+	db   *pgxpool.Pool
 }
 
-func NewAPIServer(port string, db *sql.DB) *APIServer {
+func NewAPIServer(port string, db *pgxpool.Pool) *APIServer {
 	return &APIServer{
 		addr: port,
 		db:   db,
