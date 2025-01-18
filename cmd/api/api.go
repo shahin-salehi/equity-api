@@ -29,11 +29,12 @@ func (s *APIServer) Run() error {
 	router := http.NewServeMux()
 
 	// give our handler the router so it can register functionality on it
-	listingHandler := listing.NewHandler()
+	listingStore := listing.NewStore(s.db)
+	listingHandler := listing.NewHandler(listingStore)
 
 	// register desired listing routes on router
 	listingHandler.RegisterRoutes(router)
 
-	slog.Info("API server started.")
+	slog.Info("API server started.", slog.Any("port", s.addr))
 	return http.ListenAndServe(s.addr, router)
 }

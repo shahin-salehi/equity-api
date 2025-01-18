@@ -1,5 +1,10 @@
 package types
 
+// listing interface
+type ListingStore interface {
+	Listing(l Listing) error
+}
+
 type HousingForm struct {
 	Symbol string `json:"symbol"`
 }
