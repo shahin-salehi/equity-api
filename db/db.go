@@ -51,6 +51,8 @@ func NewDatabase(connectionString string) (*pgxpool.Pool, error) {
 		return nil, err
 	}
 
+	slog.Info("pool acquired.")
+
 	return dbpool, nil
 
 }
