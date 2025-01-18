@@ -13,9 +13,9 @@ func main() {
 	// env
 
 	config := config.InitConfig()
-	cs := config.LocalConnectionString
+	cs := config.ConnectionString
 	if cs == "" {
-		slog.Error("connection string emptu, shutting down.")
+		slog.Error("connection string empty, shutting down.")
 		os.Exit(1)
 	}
 
