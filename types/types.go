@@ -9,6 +9,10 @@ type GeoTile struct {
 	GeoTile string `json:"GeoTile"`
 }
 
+type ScrapedIDs struct {
+	IDs []string
+}
+
 type Delta struct {
 	NewIDs []string `json:"newIDs"`
 }
