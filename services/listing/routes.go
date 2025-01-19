@@ -37,9 +37,9 @@ func (h *Handler) Delta(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var ids types.ScrapedIDs
-	err := utils.DeserializeJSON(r, ids)
+	err := utils.DeserializeJSON(r, &ids)
 	if err != nil {
-		slog.Error("unprocessable entity", slog.Any("status", http.StatusUnprocessableEntity))
+		slog.Error("unprocessable entity", slog.Any("status", http.StatusUnprocessableEntity), slog.Any("function", "delta"), slog.Any("error", err))
 
 		// Debug
 		b, _ := io.ReadAll(r.Body)

@@ -5,6 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/shahin-salehi/equity-api/db"
+	"github.com/shahin-salehi/equity-api/services/county"
 	"github.com/shahin-salehi/equity-api/services/listing"
 	"github.com/shahin-salehi/equity-api/services/tiles"
 )
@@ -40,7 +41,9 @@ func (s *APIServer) Run() error {
 	tilesHandler := tiles.NewHandler(dbRepo)
 	tilesHandler.RegisterRoutes(router)
 
-	// smthn
+	// counties
+	countyHandler := county.NewHandler(dbRepo)
+	countyHandler.RegisterRoutes(router)
 
 	return http.ListenAndServe(s.addr, router)
 
