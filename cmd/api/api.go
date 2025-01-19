@@ -6,6 +6,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/shahin-salehi/equity-api/db"
 	"github.com/shahin-salehi/equity-api/services/listing"
+	"github.com/shahin-salehi/equity-api/services/tiles"
 )
 
 type APIServer struct {
@@ -30,10 +31,17 @@ func (s *APIServer) Run() error {
 
 	// if crud doesn't implement the interface it will get upset here
 	dbRepo := db.NewRepo(s.db)
-	listingHandler := listing.NewHandler(dbRepo)
 
-	// register desired listing routes on router
+	// listings
+	listingHandler := listing.NewHandler(dbRepo)
 	listingHandler.RegisterRoutes(router)
+
+	// tiles
+	tilesHandler := tiles.NewHandler(dbRepo)
+	tilesHandler.RegisterRoutes(router)
+
+	// smthn
+
 	return http.ListenAndServe(s.addr, router)
 
 }
