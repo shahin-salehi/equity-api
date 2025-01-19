@@ -5,16 +5,17 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/shahin-salehi/equity-api/db"
 	"github.com/shahin-salehi/equity-api/types"
 	"github.com/shahin-salehi/equity-api/utils"
 )
 
 type Handler struct {
-	store types.ListingStore
+	store db.CRUD
 }
 
 // take interface
-func NewHandler(store types.ListingStore) *Handler {
+func NewHandler(store db.CRUD) *Handler {
 	return &Handler{store: store}
 }
 

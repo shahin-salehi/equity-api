@@ -1,8 +1,16 @@
 package types
 
-// listing interface
-type ListingStore interface {
-	Listing(l Listing) error
+type County struct {
+	County string `json:"county"`
+}
+
+type GeoTile struct {
+	County  string `json:"county"`
+	GeoTile string `json:"GeoTile"`
+}
+
+type Delta struct {
+	NewIDs []string `json:"newIDs"`
 }
 
 type HousingForm struct {

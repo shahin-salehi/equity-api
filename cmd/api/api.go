@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/shahin-salehi/equity-api/db"
 	"github.com/shahin-salehi/equity-api/services/listing"
 )
 
@@ -27,9 +28,9 @@ func (s *APIServer) Run() error {
 	// create router (name mux comes from multiplexer)
 	router := http.NewServeMux()
 
-	// give our handler the router so it can register functionality on it
-	listingStore := listing.NewStore(s.db)
-	listingHandler := listing.NewHandler(listingStore)
+	// if crud doesn't implement the interface it will get upset here
+	dbRepo := db.NewRepo(s.db)
+	listingHandler := listing.NewHandler(dbRepo)
 
 	// register desired listing routes on router
 	listingHandler.RegisterRoutes(router)
