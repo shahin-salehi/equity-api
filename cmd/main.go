@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"log/slog"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 
 	"github.com/shahin-salehi/equity-api/cmd/api"
@@ -11,9 +14,12 @@ import (
 
 func main() {
 	// env
+	go func() {
+		http.ListenAndServe("localhost:6060", nil)
+	}()
 
 	config := config.InitConfig()
-	cs := config.ConnectionString
+	cs := config.LocalConnectionString
 	if cs == "" {
 		slog.Error("connection string empty, shutting down.")
 		os.Exit(1)
@@ -24,6 +30,10 @@ func main() {
 		slog.Error("failed to start database, shutting down.")
 		os.Exit(1)
 	}
+
+	slog.Info("starting server.")
+
+	defer db.Close(context.Background())
 
 	server := api.NewAPIServer(":5500", db)
 	err = server.Run()

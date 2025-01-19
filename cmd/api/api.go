@@ -1,19 +1,18 @@
 package api
 
 import (
-	"log/slog"
 	"net/http"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5"
 	"github.com/shahin-salehi/equity-api/services/listing"
 )
 
 type APIServer struct {
 	addr string
-	db   *pgxpool.Pool
+	db   *pgx.Conn
 }
 
-func NewAPIServer(port string, db *pgxpool.Pool) *APIServer {
+func NewAPIServer(port string, db *pgx.Conn) *APIServer {
 	return &APIServer{
 		addr: port,
 		db:   db,
@@ -34,7 +33,6 @@ func (s *APIServer) Run() error {
 
 	// register desired listing routes on router
 	listingHandler.RegisterRoutes(router)
-
-	slog.Info("API server started.", slog.Any("port", s.addr))
 	return http.ListenAndServe(s.addr, router)
+
 }

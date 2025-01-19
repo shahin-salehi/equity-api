@@ -9,15 +9,14 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/shahin-salehi/equity-api/types"
 )
 
 type Store struct {
-	db *pgxpool.Pool
+	db *pgx.Conn
 }
 
-func NewStore(db *pgxpool.Pool) *Store {
+func NewStore(db *pgx.Conn) *Store {
 	return &Store{db: db}
 }
 

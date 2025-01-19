@@ -5,7 +5,7 @@ import (
 	_ "embed"
 	"log/slog"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5"
 )
 
 /**
@@ -22,37 +22,35 @@ var listings_delta string
 //go:embed functions/tables.sql
 var tables string
 
-func NewDatabase(connectionString string) (*pgxpool.Pool, error) {
+func NewDatabase(connectionString string) (*pgx.Conn, error) {
 	//connect to db
-	dbpool, err := pgxpool.New(context.Background(), connectionString)
+	conn, err := pgx.Connect(context.Background(), connectionString)
 	if err != nil {
 		slog.Error("failed to get new pool, likely connection string issue. ")
 		return nil, err
 	}
 
 	// ping test
-	err = dbpool.Ping(context.Background())
+	err = conn.Ping(context.Background())
 	if err != nil {
 		slog.Error("Ping test failed.")
 		return nil, err
 	}
 
 	// create tables
-	_, err = dbpool.Exec(context.Background(), tables)
+	_, err = conn.Exec(context.Background(), tables)
 	if err != nil {
 		slog.Error("failed to create tables.", slog.Any("error", err))
 		return nil, err
 	}
 
 	// listings delta function
-	_, err = dbpool.Exec(context.Background(), listings_delta)
+	_, err = conn.Exec(context.Background(), listings_delta)
 	if err != nil {
 		slog.Error("failed to create listings delta function.", slog.Any("error", err))
 		return nil, err
 	}
 
-	slog.Info("pool acquired.")
-
-	return dbpool, nil
+	return conn, nil
 
 }

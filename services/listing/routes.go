@@ -25,6 +25,9 @@ func (h *Handler) RegisterRoutes(router *http.ServeMux) {
 // insert hemnet listing
 // TODO: fix retun status for conflict
 func (h *Handler) InsertListing(w http.ResponseWriter, r *http.Request) {
+	// close
+	defer r.Body.Close()
+
 	// Reject get
 	if r.Method != "POST" {
 		slog.Info("Method not allowed", slog.Any("status", 405))
@@ -36,8 +39,8 @@ func (h *Handler) InsertListing(w http.ResponseWriter, r *http.Request) {
 	err := utils.DeserializeJSON(r, &payload)
 	if err != nil {
 		slog.Error("unprocessable entity", slog.Any("status", http.StatusUnprocessableEntity))
+
 		// Debug
-		defer r.Body.Close()
 		b, _ := io.ReadAll(r.Body)
 		slog.Debug("body", slog.Any("body", string(b)))
 
@@ -48,13 +51,16 @@ func (h *Handler) InsertListing(w http.ResponseWriter, r *http.Request) {
 	// insert
 	err = h.store.Listing(payload)
 	if err != nil {
-		slog.Error("failed to insert listing", slog.Any("error", err))
-		http.Error(w, "database returned error", http.StatusInternalServerError)
+		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	// ok
 	slog.Info("created", slog.Any("status", http.StatusCreated))
-	utils.SerializeJSON(w, http.StatusCreated, nil)
+	err = utils.SerializeJSON(w, http.StatusCreated, nil)
+	if err != nil {
+		slog.Error("faild to serialize", slog.Any("error", err))
+		return
+	}
 
 }

@@ -7,5 +7,9 @@ spec:
   selector:
     app: database-api
   ports:
-  - port: 5500 # service port 
+  - name: api
+    port: 5500 # service port 
     targetPort: 5500 # where api listnes 
+  - name: pprof
+    port: 6060 
+    targetPort: 6060
