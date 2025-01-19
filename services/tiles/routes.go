@@ -18,7 +18,7 @@ func NewHandler(repo db.CRUD) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(router *http.ServeMux) {
-	router.HandleFunc("/tiles/:county", h.Readtiles)
+	router.HandleFunc("/tiles", h.Readtiles)
 }
 
 func (h *Handler) Readtiles(w http.ResponseWriter, r *http.Request) {
@@ -29,11 +29,26 @@ func (h *Handler) Readtiles(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	// get param
+	// get param (this panics bad url which is crazy )
 	county := r.URL.Query().Get("county")
 	if county == "" {
 		utils.WriteError(w, http.StatusBadRequest, nil)
 	}
-	slog.Info("param", slog.Any("county", county))
+
+	// crud
+	tiles, err := h.db.TilesByCounty(county)
+	if err != nil {
+		slog.Error("failed to get tiles", slog.Any("error", err))
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	//ok
+	err = utils.SerializeJSON(w, http.StatusOK, tiles)
+	if err != nil {
+		slog.Error("failed to write tiles", slog.Any("error", err))
+		utils.WriteError(w, http.StatusInternalServerError, nil)
+		return
+	}
 
 }
