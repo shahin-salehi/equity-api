@@ -11,12 +11,12 @@ import (
 )
 
 type Handler struct {
-	store db.CRUD
+	db db.CRUD
 }
 
 // take interface
-func NewHandler(store db.CRUD) *Handler {
-	return &Handler{store: store}
+func NewHandler(repo db.CRUD) *Handler {
+	return &Handler{db: repo}
 }
 
 func (h *Handler) RegisterRoutes(router *http.ServeMux) {
@@ -50,7 +50,7 @@ func (h *Handler) InsertListing(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// insert
-	err = h.store.Listing(payload)
+	err = h.db.Listing(payload)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
