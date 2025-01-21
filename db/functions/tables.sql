@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS listings
     description text,
     fee text,
     housingform text,
-    listing_id text UNIQUE,
+    listing_id text UNIQUE NOT NULL,
     land_area text,
     record_type text,
     square_meter_price text,
@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS listings
     slug text,
     price numeric,
     immediate_price numeric,
+    price_observed date,
     PRIMARY KEY (id)
 );
 
