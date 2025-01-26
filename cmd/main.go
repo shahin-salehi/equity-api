@@ -13,19 +13,21 @@ import (
 )
 
 func main() {
-	// env
+	// get this from a var 	
+	slog.Info("version 1.0.3")
+
+	// debug memory
 	go func() {
 		http.ListenAndServe("localhost:6060", nil)
 	}()
 
+	// env
 	config := config.InitConfig()
 	cs := config.ConnectionString
 	if cs == "" {
 		slog.Error("connection string empty, shutting down.")
 		os.Exit(1)
 	}
-	slog.Info("connection string log", slog.Any("cs", cs))
-	slog.Info("version 1.0.1")
 
 	db, err := db.NewDatabase(cs)
 	if err != nil {
