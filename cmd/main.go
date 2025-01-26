@@ -24,7 +24,7 @@ func main() {
 		slog.Error("connection string empty, shutting down.")
 		os.Exit(1)
 	}
-
+	slog.Info("connection string log", slog.Any("cs",cs))
 	db, err := db.NewDatabase(cs)
 	if err != nil {
 		slog.Error("failed to start database, shutting down.")
