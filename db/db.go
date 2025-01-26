@@ -26,7 +26,7 @@ func NewDatabase(connectionString string) (*pgx.Conn, error) {
 	//connect to db
 	conn, err := pgx.Connect(context.Background(), connectionString)
 	if err != nil {
-		slog.Error("failed to get new pool, likely connection string issue. ")
+		slog.Error("failed to get new pool, likely connection string issue. ", slog.Any("error", err))
 		return nil, err
 	}
 
