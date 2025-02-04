@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: database-api
-        image: localhost:32000/equity-api:1.0.3 
+        image: localhost:32000/equity-api:1.0.4
         #imagePullPolicy: IfNotPresent # don't go to internet, check locally
         resources:
           limits:
