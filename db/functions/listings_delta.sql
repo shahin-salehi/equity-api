@@ -14,8 +14,8 @@ DECLARE
 BEGIN
 
     -- One line update IDs that are present in db but not in scraped to removed. 
-    UPDATE listings SET removed = NOW() WHERE listing_id IN (SELECT listing_id FROM listings WHERE NOT (listing_id = ANY(input_ids))) AND removed=NULL;
-   
+    UPDATE listings SET removed = NOW() WHERE NOT listing_id = ANY(input_ids) AND removed IS NULL
+
     -- return ids exlusive to scraped ids
 	RETURN QUERY SELECT ARRAY((SELECT * FROM unnest(input_ids) EXCEPT ALL SELECT listing_id FROM listings))::text[];
 
